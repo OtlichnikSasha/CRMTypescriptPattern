@@ -1,0 +1,92 @@
+$background: #f5f5f5;
+$default_color: #757575;
+$font-family: "Roboto","Helvetica","Arial",sans-serif;
+$block_background: #ffffff;
+$block_background_color: #1976d2;
+$heading_color: #1976d2;
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  font-family: $font-family;
+  font-size: 14px;
+  color: $default_color;
+  margin: 0;
+  padding: 0;
+  background: $background;
+  z-index: 5;
+}
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+a{
+  color: $default_color;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.container{
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 900px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  background:$block_background_color;
+  border-radius: 5px;
+}
+
+
+.loader{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5000;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.css-11xur9t-MuiPaper-root-MuiTableContainer-root{
+  margin-top: 25px;
+}
+.css-cvumne-MuiDrawer-docked .MuiDrawer-paper{
+  height: 100vh;
+}
+.css-aq1gdx-MuiDrawer-docked .MuiDrawer-paper{
+  height: 100vh;
+}
+.empty_information{
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  font-weight: bold;
+}
+@import "block/users";
+@import "block/itemsList";

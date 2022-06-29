@@ -1,0 +1,32 @@
+
+/* Сама таблица */
+.css-rqglhn-MuiTable-root{
+  margin-top: 25px;
+}
+/* Строка с заголовками */
+.css-15wwp11-MuiTableHead-root{
+  .css-1q1u3t4-MuiTableRow-root{
+    background: #F8F9FA!important;
+  }
+}
+/* Строка вывода */
+.css-1q1u3t4-MuiTableRow-root{
+  background: #F8F9FA;
+  &:nth-child(2n+1){
+    background: #FFFFFF;
+  }
+}
+/* Одна колонка у заголовка */
+.css-12q85cb-MuiTableCell-root{
+  font-weight: bold;
+  &::first-letter{
+    text-transform: uppercase;
+  }
+}
+.deleteIcon{
+  svg{
+    cursor: pointer;
+    color: #DC3545;
+  }
+
+}

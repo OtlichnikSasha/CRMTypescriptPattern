@@ -1,0 +1,217 @@
+$searchBorderColor: #E6E6E6;
+$red: #DC3545;
+/* Link for Registration and Authorization page */
+.offer_login_link{
+  color: #1976d2;
+}
+.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root{
+  height: 36px;
+}
+
+.top_container{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  &__btns{
+    display: flex;
+    align-items: center;
+    .fa-plus{
+      margin-right: 10px;
+    }
+  }
+  &__button_group{
+    margin-left: 10px;
+    &__btn{
+      background: #E0ECFF;
+      color: #212529;
+      :last-child{
+        border-left: 0;
+      }
+    }
+  }
+}
+.css-1gtpq4r-MuiButtonBase-root-MuiIconButton-root{
+  width: auto;
+}
+@media screen and (max-width: 1050px) {
+  .top_container{
+    display: block;
+  }
+  .search_users_btn{
+    margin-top: 15px;
+  }
+  .css-piqts5-MuiInputBase-root{
+    width: 90%;
+  }
+}
+
+/* Pagination */
+.css-1oj2twp-MuiPagination-root{
+  margin-top: 25px;
+}
+.css-rppfq7-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected{
+  background: #1565c0!important;
+  color: #FFFFFF;
+}
+
+/* Modal Window */
+.MuiBox-root.css-1wnsr1i{
+  overflow-x: auto;
+}
+.css-1wnsr1i{
+  padding: 15px;
+}
+.create_user_btn{
+  display: flex;
+  justify-content: space-between;
+}
+.css-sghohy-MuiButtonBase-root-MuiButton-root{
+  padding: 6px 10px;
+  text-transform: inherit;
+}
+.css-viou3o-MuiAutocomplete-root{
+  width: 200px;
+}
+.css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root{
+  font-size: 0.875rem;
+  background: #E0ECFF;
+}
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+  top: -10px;
+  color: #212529;
+}
+.css-viou3o-MuiAutocomplete-root.MuiOutlinedInput-root{
+  padding: 0;
+}
+
+.search_users_btn{
+  border: 1px solid $searchBorderColor;
+  border-radius: 4px 0 0 4px;
+}
+.css-piqts5-MuiInputBase-root{
+  border-right: 1px solid $searchBorderColor;
+}
+
+.MuiBox-root{
+  &.css-1wnsr1i{
+    height: 80%;
+    width: 90%;
+    border: 0;
+    border-radius: 5px;
+  }
+  @media screen and (max-width: 880px){
+    &.css-1wnsr1i{
+      height: 90%;
+    }
+  }
+}
+.add_modal__flex{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  &.top{
+    border-bottom: 1px solid #E6E6E6;
+  }
+  &_item{
+    width: 50%;
+    .css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
+      width: 100%;
+    }
+  }
+}
+
+.css-1nrlq1o-MuiFormControl-root{
+  width: 200px;
+  margin-left: 10px!important;
+  font-size: 0.875rem;
+  background: #E0ECFF;
+}
+
+
+/* Modal User Window */
+.add_modal_close{
+  transition: color .4s;
+  cursor: pointer;
+  svg:hover{
+    color: $red;
+    transition: color .4s;
+  }
+}
+.add_modal_container{
+  padding: 25px 0;
+}
+.add_modal__label{
+  font-family: 'SF Pro Display', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: -0.32px;
+  color: #212529;
+  &.role{
+    margin-bottom: 10px;
+  }
+}
+.add_modal__input_block{
+  margin: 15px 0;
+  .css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root{
+    background: #FFF;
+  }
+}
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input{
+  height: 1em;
+}
+.add_modal__role_block{
+  height: 80px;
+  width: 50%;
+  border-radius: 4px;
+  padding: 10px;
+  background: #F8F9FA;
+  gap: 8px;
+}
+@media screen and (max-width: 880px){
+  .add_modal__role_block{
+    height: 100px;
+  }
+}
+@media screen and (max-width: 650px){
+  .add_modal__role_block{
+    height: 140px;
+  }
+}
+
+.role_block__flex{
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.role_block__text_heading{
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: -0.32px;
+  color: #212529;
+  margin-bottom: 10px;
+}
+.role_block__text_content{
+  font-size: 12.8px;
+  line-height: 15px;
+  color: #6C757D;
+}
+
+.bottom_users{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .remove_button{
+    background: $red;
+    color: #FFF;
+    svg{
+      margin-right: 10px;
+    }
+  }
+}
+
