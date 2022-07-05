@@ -1,10 +1,8 @@
 import React, {FC} from 'react';
 import TableCell from '@mui/material/TableCell';
-interface PropsTypes{
-    rowsValues: any[]
-}
 
-export const ItemListData: FC<PropsTypes> = ({rowsValues}) => {
+
+export const ItemListData = ({rowsValues}) => {
     console.log(rowsValues)
     return (
         <>

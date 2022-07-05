@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import axios from 'axios'
+import {ModalWindowType} from "../../../types/ModalWindowType";
 
 const style = {
     position: 'absolute',
@@ -27,12 +28,7 @@ const languages = [
 
 ]
 
-interface PropTypes{
-    open: boolean,
-    setOpen: React.ComponentState
-}
-
-export const AddModalWindow: FC<PropTypes> = ({open, setOpen}) => {
+export const AddModalWindow: FC<ModalWindowType> = ({open, setOpen}) => {
     const [form, setForm] = useState({
         login: '',
         password: '',
@@ -53,6 +49,7 @@ export const AddModalWindow: FC<PropTypes> = ({open, setOpen}) => {
         axios.post("/api/user", {...form}).then(r => console.log('r', r))
     }
     const handleClose = () => setOpen(false);
+    // @ts-ignore
     return (
         <Modal
             open={open}
@@ -137,6 +134,8 @@ export const AddModalWindow: FC<PropTypes> = ({open, setOpen}) => {
                             renderInput={(params) => <TextField {...params} label="Выберите"/>}
                         />
                     </div>
+                </div>
+                <div className="modal_bottom">
                     <Button variant="contained" onClick={addUser}>
                         Добавить пользователя
                     </Button>

@@ -1,38 +1,39 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link} from 'react-router-dom';
-import axios from "axios";
+import axios from "axios"
+import {BACKEND_API} from "../global_variables"
+import {useAuth} from "../hooks/auth_hook"
+import {LoginType} from "../types/UserType";
 
 const theme = createTheme();
 
 export const Login = () => {
-
-    const handleSubmit = async (event) => {
+    const auth = useAuth()
+    const handleSubmit = async (event: any) => {
+        const http = axios.create({
+            baseURL: BACKEND_API
+        })
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const http = axios.create({
-            withCredentials: true,
-            baseURL: "https://sleepy-sierra-72344.herokuapp.com/api"
-        })
         const userData = {
             username: data.get('username'),
             password: data.get('password'),
             rememberMe: true
         }
         try{
-            const data = await http.post("/authenticate", userData)
-            console.log('data', data)
+            const response:LoginType = await http.post("/authenticate", userData)
+            console.log('response', response)
+            localStorage.setItem("token", response.data.id_token)
         }
         catch(e){
             console.log('e', e)
@@ -90,18 +91,18 @@ export const Login = () => {
                         >
                             Авторизоваться
                         </Button>
-                        <Grid container>
-                            <Grid item xs className="offer_login_link">
-                                <Link to="#" variant="body2">
-                                    Забыли пароль?
-                                </Link>
-                            </Grid>
-                            <Grid item className="offer_login_link">
-                                <Link to="/sign_in" variant="body2">
-                                    {"У вас нет аккаунта? Зарегистрироваться"}
-                                </Link>
-                            </Grid>
-                        </Grid>
+                        {/*<Grid container>*/}
+                        {/*    <Grid item xs className="offer_login_link">*/}
+                        {/*        <Link to="#" variant="body2">*/}
+                        {/*            Забыли пароль?*/}
+                        {/*        </Link>*/}
+                        {/*    </Grid>*/}
+                        {/*    <Grid item className="offer_login_link">*/}
+                        {/*        <Link to="/sign_in" variant="body2">*/}
+                        {/*            {"У вас нет аккаунта? Зарегистрироваться"}*/}
+                        {/*        </Link>*/}
+                        {/*    </Grid>*/}
+                        {/*</Grid>*/}
                     </Box>
                 </Box>
             </Container>

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState, useRef} from 'react';
 import Button from "@mui/material/Button";
 import {AddModalWindow} from "./block/user/AddModalWindow";
 import FormControl from "@mui/material/FormControl";
@@ -16,17 +16,19 @@ const actions = [
     {label: "Удалить"}
 ]
 
+interface PropsTypes{
+    data: any
+}
 
-
-export const ItemActions= ({data}) => {
-
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef(null);
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
-    const [openModal, setOpenModal] = React.useState(false);
-    const [openEditModal, setOpenEditModal] = React.useState(false);
-    const [action, setAction] = React.useState(0);
-    const actionRef = React.useRef(null)
+// @ts-ignore
+export const ItemActions: FC<PropsTypes> = (data) => {
+    const [open, setOpen] = useState<boolean>(false);
+    const anchorRef = useRef(null);
+    const [selectedIndex, setSelectedIndex] = useState(1);
+    const [openModal, setOpenModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [action, setAction] = useState(0);
+    const actionRef = useRef(null)
     const handleChange = (event:any) => {
         if (event.target.value) setOpenEditModal(true)
     };

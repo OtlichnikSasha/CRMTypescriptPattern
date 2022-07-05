@@ -56,9 +56,7 @@ $red: #DC3545;
 }
 
 /* Modal Window */
-.MuiBox-root.css-1wnsr1i{
-  overflow-x: auto;
-}
+
 .css-1wnsr1i{
   padding: 15px;
 }
@@ -67,8 +65,8 @@ $red: #DC3545;
   justify-content: space-between;
 }
 .css-sghohy-MuiButtonBase-root-MuiButton-root{
-  padding: 6px 10px;
-  text-transform: inherit;
+  padding: 6px 10px!important;
+  text-transform: inherit!important;
 }
 .css-viou3o-MuiAutocomplete-root{
   width: 200px;
@@ -112,6 +110,7 @@ $red: #DC3545;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  padding-right: 10px;
   &.top{
     border-bottom: 1px solid #E6E6E6;
   }
@@ -142,6 +141,8 @@ $red: #DC3545;
 }
 .add_modal_container{
   padding: 25px 0;
+  height: 90%;
+  overflow-x: auto;
 }
 .add_modal__label{
   font-family: 'SF Pro Display', sans-serif;
@@ -181,6 +182,10 @@ $red: #DC3545;
   .add_modal__role_block{
     height: 140px;
   }
+}
+.modal_bottom{
+  border-top: 1px solid #E6E6E6;
+  padding-top: 10px;
 }
 
 .role_block__flex{

@@ -1,2 +1,2 @@
-export const BACKEND_API = "https://sleepy-sierra-72344.herokuapp.com/api/"
-export const LOGO_NAME = "CRM"
+export const BACKEND_API="http://localhost:8080/api/"
+export const LOGO_NAME="CRM"

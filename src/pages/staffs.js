@@ -54,7 +54,7 @@ export const Staffs = () => {
     }
 
     const users = [
-        {id: 1, name: "fsada", surname: 'fdsfds', email: "heyo!"}
+        {id: 1, name: "Пётр", surname: 'Петров', email: "petr-petrov@mail.ru"}
     ]
 
     if(loading) return <Loader/>
