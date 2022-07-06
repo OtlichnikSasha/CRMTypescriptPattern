@@ -9,7 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import {Empty} from "../components/block/Empty";
 import Table from "@mui/material/Table";
-import {CategoriesList} from "../components/CategoriesList";
+import {CategoriesList} from "../components/block/category/CategoriesList";
 import Button from "@mui/material/Button";
 import {AddModalWindow} from "../components/block/category/AddModalWindow";
 import FormControl from "@mui/material/FormControl";
@@ -39,7 +39,7 @@ export const Categories: FC = () => {
         const response: AxiosResponse = await http.get("/categories")
         console.log('response', response)
         const categories: CategoryType[] = response.data
-        setData([data, ...categories])
+        setData([...data, ...categories])
     }
 
     const removeEntity = async (id: number) => {
@@ -55,13 +55,6 @@ export const Categories: FC = () => {
         }
 
     }
-
-
-
-
-
-
-
 
     const [open, setOpen] = useState<boolean>(false);
     const anchorRef = useRef(null);

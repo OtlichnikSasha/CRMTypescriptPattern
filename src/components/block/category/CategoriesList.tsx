@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {CategoryType} from "../types/CategoryType";
+import {CategoryType} from "../../../types/CategoryType";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import DeleteIcon from "@mui/icons-material/Delete";

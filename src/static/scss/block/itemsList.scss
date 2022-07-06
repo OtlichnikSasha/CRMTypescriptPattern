@@ -18,11 +18,25 @@
 }
 /* Одна колонка у заголовка */
 .css-12q85cb-MuiTableCell-root{
-  font-weight: bold;
+  font-weight: bold!important;
+  border: 1px solid #e8e8e8;
+  border-left: 0;
   &::first-letter{
     text-transform: uppercase;
   }
+  &:first-child{
+    border-left: 1px solid #e8e8e8;
+  }
 }
+
+/* Select */
+.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root{
+  height: 56px;
+  width: 100%;
+}
+
+/* Thead элемент */
+
 .deleteIcon{
   svg{
     cursor: pointer;
