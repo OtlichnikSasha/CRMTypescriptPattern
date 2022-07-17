@@ -6,13 +6,13 @@ import Modal from "@mui/material/Modal";
 import Select from '@mui/material/Select';
 import Button from "@mui/material/Button";
 
-import {http} from "../../../http/index"
-import {ModalWindowType} from "../../../types/ModalWindowType";
+import {http} from "../../http"
+import {AddModalWindowType} from "../../types/ModalWindowType";
 import {AxiosResponse} from "axios";
-import {CreateProductType} from "../../../types/ProductType";
+import {CreateProductType} from "../../types/ProductType";
 import MenuItem from "@mui/material/MenuItem";
 import {OutlinedInput, Theme} from "@mui/material";
-import {CategoryType} from "../../../types/CategoryType";
+import {CategoryType} from "../../types/CategoryType";
 
 const style = {
     position: 'absolute',
@@ -26,7 +26,7 @@ const style = {
     p: 4,
 };
 
-export const AddModalWindow: FC<ModalWindowType> = ({open, setOpen}) => {
+export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
     const [form, setForm] = useState<CreateProductType>({
         name: '',
         views: 0,
@@ -49,10 +49,8 @@ export const AddModalWindow: FC<ModalWindowType> = ({open, setOpen}) => {
     const getCategories = useCallback(async () => {
         console.log('Зашли!')
         try {
-            const data: AxiosResponse<any> = await http.get("/categories")
-            console.log('data', data)
-            const categories_answer = data.data
-            setCategories([...categories, ...categories_answer])
+            const response: AxiosResponse<CategoryType[]> = await http.get("/categories")
+            setCategories([...categories, ...response.data])
         } catch (e) {
             console.log('e', e)
         }

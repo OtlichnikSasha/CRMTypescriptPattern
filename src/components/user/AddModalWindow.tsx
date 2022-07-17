@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import axios from 'axios'
-import {ModalWindowType} from "../../../types/ModalWindowType";
+import {AddModalWindowType} from "../../types/ModalWindowType";
 
 const style = {
     position: 'absolute',
@@ -28,7 +28,7 @@ const languages = [
 
 ]
 
-export const AddModalWindow: FC<ModalWindowType> = ({open, setOpen}) => {
+export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
     const [form, setForm] = useState({
         login: '',
         password: '',

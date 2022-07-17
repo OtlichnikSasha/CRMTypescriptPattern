@@ -1,0 +1,17 @@
+$red: #DC3545;
+$hoverRed: #f61f33;
+.delete_notification{
+  padding: 15px 0 5px;
+  .remove_button{
+    background: $red;
+    color: #FFF;
+    text-transform: inherit;
+    &:hover{
+      background: $hoverRed;
+      transition: all .3s;
+    }
+    &:focus{
+      text-transform: uppercase;
+    }
+  }
+}

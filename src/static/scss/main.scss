@@ -76,7 +76,6 @@ input::-webkit-inner-spin-button {
   align-items: center;
 }
 
-
 .css-11xur9t-MuiPaper-root-MuiTableContainer-root{
   margin-top: 25px;
 }
@@ -91,6 +90,38 @@ input::-webkit-inner-spin-button {
   padding: 20px 0;
   text-align: center;
   font-weight: bold;
+}
+
+.nav-link.active{
+  color: $heading_color;
+  .css-cveggr-MuiListItemIcon-root{
+    color: $heading_color!important;
+  }
+}
+
+
+.preloader_text {
+  background: $heading_color;
+  width: 10px;
+  height: 10px;
+  -webkit-animation: radial-pulse 0.8s infinite;
+  animation: radial-pulse 0.8s infinite;
+  margin-left: 30px;
+  margin-top: 15px;
+  z-index: 500;
+}
+
+@-webkit-keyframes radial-pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(28, 154, 250, 0);
+    box-shadow: 0 0 0 0 rgba(28, 154, 250, 0);
+    border-radius: 50%;
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 10px rgba(28, 154, 250, 100);
+    box-shadow: 0 0 0 10px rgba(28, 154, 250, 100);
+    border-radius: 50%;
+  }
 }
 @import "block/users";
 @import "block/itemsList";

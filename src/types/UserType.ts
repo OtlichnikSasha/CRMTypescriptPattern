@@ -1,5 +1,3 @@
-export interface LoginType{
-    data: {
-        id_token: string
-    }
+export interface LoginType {
+    id_token: string
 }

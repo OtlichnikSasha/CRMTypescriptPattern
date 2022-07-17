@@ -3,9 +3,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import {ModalWindowType} from "../../../types/ModalWindowType";
+import {AddModalWindowType} from "../../types/ModalWindowType";
 import Button from "@mui/material/Button";
-import {http} from "../../../http/index"
+import {http} from "../../http"
 import {AxiosResponse} from "axios";
 
 const style = {
@@ -19,7 +19,7 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-export const AddModalWindow: FC<ModalWindowType> = ({open, setOpen}) => {
+export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
     const [form, setForm] = useState({
         name: '',
         description: ''
@@ -44,8 +44,6 @@ export const AddModalWindow: FC<ModalWindowType> = ({open, setOpen}) => {
         catch(e){
             console.log('e', e)
         }
-
-
     }
     return (
         <Modal

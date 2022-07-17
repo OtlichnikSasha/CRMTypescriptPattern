@@ -7,5 +7,10 @@ export interface CategoryType{
     description: string
     id:  number
     name: string
-    products: []
+    products?: []
+}
+
+export interface CategoryEditType{
+    description: string
+    name: string
 }

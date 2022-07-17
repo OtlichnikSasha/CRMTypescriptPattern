@@ -12,11 +12,12 @@ const MainRouter = () => {
     return (
         <Routes>
             {
-                auth.token ? authRoutes.map(({path, element}) =>
-                        <Route key={path} path={path} element={element}/>
-                    )
-                    :
-                    publicRoutes.map(({path, element}) =>
+                auth.token && authRoutes.map(({path, element}) =>
+                    <Route key={path} path={path} element={element}/>
+                )
+            }
+            {
+                    ! auth.token && publicRoutes.map(({path, element}) =>
                         <Route key={path} path={path} element={element}/>
                     )
             }

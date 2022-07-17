@@ -1,11 +1,11 @@
 import React, {FC, useState, useRef} from 'react';
 import Button from "@mui/material/Button";
-import {AddModalWindow} from "./block/user/AddModalWindow";
+import {AddModalWindow} from "./user/AddModalWindow";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {EditModalWindow} from "./block/user/EditModalWindow";
+import {EditModalWindow} from "./user/EditModalWindow";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";

@@ -1,154 +1,138 @@
-import React, {FC, useState, useEffect, useRef} from 'react';
+import React, {FC, useState, useEffect, useRef, useCallback, ChangeEvent} from 'react';
 import Grid from "@mui/material/Grid";
-import {http} from "../http/index"
-import {AxiosResponse} from "axios"
-import {CategoryType} from "../types/CategoryType";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import {Empty} from "../components/block/Empty";
 import Table from "@mui/material/Table";
-import {CategoriesList} from "../components/block/category/CategoriesList";
-import Button from "@mui/material/Button";
-import {AddModalWindow} from "../components/block/category/AddModalWindow";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import {EditModalWindow} from "../components/block/user/EditModalWindow";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-
+import {CategoriesList} from "../components/category/CategoriesList";
+import {http} from "../http/index"
+import {AxiosResponse} from "axios"
+import {CategoryEditType, CategoryType} from "../types/CategoryType";
+import {AddModalWindow} from "../components/category/AddModalWindow";
+import {DeleteNotification} from "../components/deleteNotification/DeleteNotification";
+import {TopActions} from "../components/topActions/TopActions";
+import {Loader} from "../components/loader/Loader";
+import {EditModalWindow} from "../components/category/EditModalWindow";
 
 export const Categories: FC = () => {
     const [data, setData] = useState<CategoryType[]>([]);
+    const [deleteNotification, setDeleteNotification] = useState<boolean>(false)
+    const [deleteHeading, setDeleteHeading] = useState<string>('')
+    const [deleteMessage, setDeleteMessage] = useState<string>('')
+    const [deleteId, setDeleteId] = useState<number>(0)
+    const [search, setSearch] = useState<string>('')
+    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [editModal, setEditModal] = useState<boolean>(false);
+    const [category, setCategory] = useState<CategoryType>({
+        name: '',
+        description: '',
+        id: 0
+    });
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const changeEntity = (entity: any) => {
-        // @ts-ignore
-        setData([...data, entity])
+
+    const changeEntity = (entity: CategoryType) => {
     }
+
+    const getCategories = useCallback(async () => {
+        setLoading(true)
+        const response: AxiosResponse<CategoryType[]> = await http.get("/categories")
+        setData([...data, ...response.data])
+        document.title = "Категории"
+        setLoading(false)
+    }, [])
 
     useEffect(() => {
         getCategories()
-    }, [])
+    }, [getCategories])
 
 
-    const getCategories = async () => {
-        const response: AxiosResponse = await http.get("/categories")
-        console.log('response', response)
-        const categories: CategoryType[] = response.data
-        setData([...data, ...categories])
+    const openEditModal = (entity: CategoryType) => {
+        setEditModal(true)
+        setCategory(entity)
     }
 
-    const removeEntity = async (id: number) => {
-        try{
-            console.log("Удаляем категорию")
-            // Подгружаем категории
-            const status: AxiosResponse<any> = await http.delete(`/categories/${id}`)
-            console.log('status', status)
+
+    // Открываем модальное окно с удаление
+    const openRemoveNotification = (entity: CategoryType) => {
+        setDeleteId(entity.id)
+        setDeleteNotification(true)
+        setDeleteHeading(`Вы действительно хотите удалить категорию <b>${entity.name}</b>?`)
+        setDeleteMessage(`Вместе с категорией удалится ${entity?.products?.length} товаров`)
+    }
+
+    // Удаляем сущность
+    const removeEntity = async () => {
+        try {
+            const data: AxiosResponse = await http.delete(`/categories/${deleteId}`)
+            console.log('data', data)
             return getCategories()
-        }
-        catch(e){
-            console.log('e', e)
-        }
+        } catch (e) {
 
+        }
     }
 
-    const [open, setOpen] = useState<boolean>(false);
-    const anchorRef = useRef(null);
-    const [selectedIndex, setSelectedIndex] = useState(1);
-    const [openModal, setOpenModal] = useState(false);
-    const [openEditModal, setOpenEditModal] = useState(false);
-    const [action, setAction] = useState(0);
-    const actionRef = useRef(null)
-    const handleChange = (event:any) => {
-        if (event.target.value) setOpenEditModal(true)
-    };
-    const handleClick = () => {
-    };
-
-    const handleMenuItemClick = (event: any, index: number) => {
-        setSelectedIndex(index);
-        setOpen(false);
-    };
-
-    const handleToggle = () => {
-        setOpen((prevOpen) => !prevOpen);
-    };
-
-    // const handleClose = (event: any) => {
-    //     if (anchorRef && anchorRef.current && anchorRef.current?.contains(event.target)) {
-    //         return;
-    //     }
-    //     setOpen(false);
-    // };
-
-    const changeAction = () => {
-        console.log(actionRef)
+    const startSearch = async () => {
+        if (search) {
+            try {
+                const data: AxiosResponse<CategoryType[]> = await http.get(`/categories?q=${search}`)
+                console.log('data', data)
+            } catch (e) {
+            }
+        }
     }
 
-    const openEditModalWindow = () => {
-        setOpenEditModal(true)
+    const reloadData = async () => {
+        await getCategories()
     }
 
     const handleOpen = () => setOpenModal(true);
     return (
         <Grid item xs={12}>
-            <section className="top_container">
-                <div className="top_container__btns">
-                    <Button variant="contained" onClick={handleOpen}>
-                        + Добавить категорию
-                    </Button>
-                    <AddModalWindow setOpen={setOpenModal} open={openModal}/>
-                    <FormControl>
-                        <InputLabel id="demo-simple-select-label">Действия</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={action}
-                            label="Действия"
-                            onChange={handleChange}
-                        >
-                            <MenuItem value={1} onClick={openEditModalWindow}>Редактировать</MenuItem>
-                            <MenuItem value={2}>Удалить</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <EditModalWindow open={openEditModal} setOpen={setOpenEditModal} user={data}/>
-                </div>
-                <div className="search_users_btn">
-                    <InputBase
-                        sx={{ml: 1, flex: 1}}
-                        placeholder="Поиск по таблице"
-                        inputProps={{'aria-label': 'search google maps'}}
-                    />
-                    <IconButton type="submit" sx={{p: '10px'}} aria-label="search">
-                        <SearchIcon/>
-                    </IconButton>
-                </div>
-            </section>
+            <TopActions
+                btnText="Добавить категорию"
+                search={search}
+                setSearch={setSearch}
+                startSearch={startSearch}
+                handleOpen={handleOpen}
+                reloadData={reloadData}
+            />
+            <AddModalWindow setOpen={setOpenModal} open={openModal}/>
+            <EditModalWindow setOpen={setEditModal} open={editModal} category={category}/>
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell align="center"><input type="checkbox"/></TableCell>
                         <TableCell align="center">Название</TableCell>
                         <TableCell align="center">Описание</TableCell>
-                        <TableCell align="center">Удалить</TableCell>
+                        <TableCell align="center">Действия</TableCell>
                     </TableRow>
                 </TableHead>
 
                 <TableBody>
-                    {data.length ? data.map(row => {
+                    {loading ?
+                        <Loader />
+                        :
+                        <></>
+                    }
+                    {data.length && !loading ? data.map(row => {
                             return (
-                                <CategoriesList key={row.id} category={row} removeEntity={removeEntity}/>
+                                <CategoriesList key={row.id} category={row}
+                                                openRemoveNotification={openRemoveNotification}
+                                                openEditModal={openEditModal}
+                                />
                             )
                         })
                         :
-                        <Empty/>
+                        <></>
                     }
+                    {!data.length && !loading ? <Empty/> : <></>}
+
                 </TableBody>
             </Table>
+            <DeleteNotification heading={deleteHeading} text={deleteMessage}
+                                open={deleteNotification} setOpen={setDeleteNotification} removeEntity={removeEntity}/>
         </Grid>
     );
 };

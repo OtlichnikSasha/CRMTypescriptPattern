@@ -1,8 +1,7 @@
 import axios from 'axios'
-import {BACKEND_API} from "../global_variables"
 
 export const http = axios.create({
-    baseURL: BACKEND_API,
+    baseURL: process.env.REACT_APP_BACKEND_API,
     withCredentials: true
 })
 

@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom"
+import {NavLink} from "react-router-dom"
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -31,12 +31,12 @@ export const nav = (
             nav_items.map(item => {
                 return (
                     <>
-                        <Link to={item.link}>
+                        <NavLink to={item.link} className="nav-link">
                             <ListItemButton key={`nav-${item.name}`}>
                                 <ListItemIcon>{item.icon}</ListItemIcon>
                                 <ListItemText primary={item.name}/>
                             </ListItemButton>
-                        </Link>
+                        </NavLink>
                     </>
 
                 )

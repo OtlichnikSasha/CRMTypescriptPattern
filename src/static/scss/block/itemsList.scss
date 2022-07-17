@@ -37,10 +37,17 @@
 
 /* Thead элемент */
 
-.deleteIcon{
+.action_list{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  /* Edit icon */
+  .css-i4bv87-MuiSvgIcon-root:first-child{
+    cursor: pointer;
+    color: #636262;
+  }
   svg{
     cursor: pointer;
     color: #DC3545;
   }
-
 }

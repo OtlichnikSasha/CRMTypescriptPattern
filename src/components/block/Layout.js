@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {LOGO_NAME} from "../../global_variables"
 import {styled, createTheme, ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -100,10 +99,10 @@ export const Layout = ({children}) => {
                                         noWrap
                                         sx={{flexGrow: 1}}
                                     >
-                                        {LOGO_NAME}
+                                        {process.env.REACT_APP_LOGO_NAME}
                                     </Typography>
                                     <Badge color="secondary">
-                                        Клавдия Ивановна
+                                        Admin
                                     </Badge>
                                     <IconButton color="inherit">
                                         <Badge color="secondary">

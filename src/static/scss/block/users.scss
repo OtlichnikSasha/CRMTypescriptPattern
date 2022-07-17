@@ -8,43 +8,7 @@ $red: #DC3545;
   height: 36px;
 }
 
-.top_container{
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  &__btns{
-    display: flex;
-    align-items: center;
-    .fa-plus{
-      margin-right: 10px;
-    }
-  }
-  &__button_group{
-    margin-left: 10px;
-    &__btn{
-      background: #E0ECFF;
-      color: #212529;
-      :last-child{
-        border-left: 0;
-      }
-    }
-  }
-}
-.css-1gtpq4r-MuiButtonBase-root-MuiIconButton-root{
-  width: auto;
-}
-@media screen and (max-width: 1050px) {
-  .top_container{
-    display: block;
-  }
-  .search_users_btn{
-    margin-top: 15px;
-  }
-  .css-piqts5-MuiInputBase-root{
-    width: 90%;
-  }
-}
+
 
 /* Pagination */
 .css-1oj2twp-MuiPagination-root{
@@ -205,15 +169,16 @@ $red: #DC3545;
   line-height: 15px;
   color: #6C757D;
 }
-
+.remove_button {
+  background: $red;
+  color: #FFF;
+}
 .bottom_users{
   width: 100%;
   display: flex;
   align-items: center;
   gap: 10px;
   .remove_button{
-    background: $red;
-    color: #FFF;
     svg{
       margin-right: 10px;
     }

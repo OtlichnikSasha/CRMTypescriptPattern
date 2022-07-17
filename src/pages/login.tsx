@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FormEvent} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,8 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from "axios"
-import {BACKEND_API} from "../global_variables"
+import axios, {AxiosResponse} from "axios"
 import {useAuth} from "../hooks/auth_hook"
 import {LoginType} from "../types/UserType";
 
@@ -19,10 +18,12 @@ const theme = createTheme();
 
 export const Login = () => {
     const auth = useAuth()
-    const handleSubmit = async (event: any) => {
-        const http = axios.create({
-            baseURL: BACKEND_API
-        })
+    console.log('process.env.REACT_APP_BACKEND_API', process.env.REACT_APP_BACKEND_API)
+    const http = axios.create({
+        baseURL: process.env.REACT_APP_BACKEND_API,
+        withCredentials: true
+    })
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const userData = {
@@ -31,7 +32,7 @@ export const Login = () => {
             rememberMe: true
         }
         try{
-            const response:LoginType = await http.post("/authenticate", userData)
+            const response:AxiosResponse<LoginType> = await http.post("/authenticate", userData)
             console.log('response', response)
             localStorage.setItem("token", response.data.id_token)
         }
