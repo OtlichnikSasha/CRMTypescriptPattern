@@ -4,7 +4,7 @@ import {AddModalWindow} from "../components/product/AddModalWindow";
 import {EditModalWindow} from "../components/product/EditModalWindow";
 import {AxiosResponse} from "axios";
 import {http} from "../http";
-import {ProductType} from "../types/ProductType";
+import {IProduct} from "../types/ProductType";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
@@ -15,10 +15,11 @@ import Table from "@mui/material/Table";
 import {TopActions} from "../components/topActions/TopActions";
 import {Loader} from "../components/loader/Loader";
 import {DeleteNotification} from "../components/deleteNotification/DeleteNotification";
+import {useGetProductsQuery, useLazyGetProductsQuery, useDeleteProductMutation} from "../store/api/product.api";
+import Snackbar from "@mui/material/Snackbar";
 
 
 export const Products: FC = () => {
-    const [data, setData] = useState<ProductType[]>([]);
     const [deleteNotification, setDeleteNotification] = useState<boolean>(false)
     const [deleteHeading, setDeleteHeading] = useState<string>('')
     const [deleteMessage, setDeleteMessage] = useState<string>('')
@@ -26,7 +27,7 @@ export const Products: FC = () => {
     const [search, setSearch] = useState<string>('')
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [editModal, setEditModal] = useState<boolean>(false);
-    const [product, setProduct] = useState<ProductType>({
+    const [product, setProduct] = useState<IProduct>({
         amount: 0,
         availability: false,
         categories: undefined,
@@ -39,58 +40,42 @@ export const Products: FC = () => {
         price: 0,
         views: 0
     });
-    const [loading, setLoading] = useState<boolean>(false);
+    const [openNotification, setOpenNotification] = useState<boolean>(false)
+    const [messageNotification, setMessageNotification] = useState<string>("")
+    const {data, isLoading} = useGetProductsQuery()
+    const [fetchProducts] = useLazyGetProductsQuery()
+    const [fetchRemoveProduct] = useDeleteProductMutation()
 
-    const openEditModal = (entity: ProductType) => {
+    const openEditModal = (entity: IProduct) => {
         setEditModal(true)
         setProduct(entity)
     }
 
-
     // Открываем модальное окно с удаление
-    const openRemoveNotification = (entity: ProductType) => {
+    const openRemoveNotification = (entity: IProduct) => {
         setDeleteId(entity.id)
         setDeleteNotification(true)
         setDeleteHeading(`Вы действительно хотите удалить товар <b>${entity.name}</b>?`)
         setDeleteMessage(`Вместе с ним удалятся ${entity?.images?.length} фотографий`)
     }
 
-    useEffect(() => {
-        getProducts()
-    }, [])
-
-
-    const getProducts = async () => {
-        setLoading(true)
-        const response: AxiosResponse<ProductType[]> = await http.get("/products")
-        const products = response.data
-        setData([...data, ...products])
-        setLoading(false)
-    }
-
     // Удаляем сущность
     const removeEntity = async () => {
-        try {
-            const status: AxiosResponse<any> = await http.delete(`/products/${deleteId}`)
-            console.log('status', status)
-            return await getProducts()
-        } catch (e) {
-
-        }
+        await fetchRemoveProduct(deleteId)
+        setDeleteNotification(false)
+        setMessageNotification("Товар успешно удален!")
+        setOpenNotification(true)
+        return reloadData()
     }
 
     const startSearch = async () => {
-        if (search) {
-            const response: AxiosResponse<ProductType[]> = await http.get(`/products?q=${search}`)
-            console.log('data', response)
-        }
+        // if (search) {
+        //     const response: AxiosResponse<IProduct[]> = await http.get(`/products?q=${search}`)
+        //     console.log('data', response)
+        // }
     }
 
-    const reloadData = async () => {
-        setData([])
-        await getProducts()
-    }
-
+    const reloadData = () => fetchProducts()
     const handleOpen = () => setOpenModal(true);
     return (
         <Grid item xs={12}>
@@ -103,7 +88,7 @@ export const Products: FC = () => {
                 reloadData={reloadData}
             />
             <AddModalWindow setOpen={setOpenModal} open={openModal}/>
-            <EditModalWindow setOpen={setEditModal} open={editModal}/>
+            <EditModalWindow setOpen={setEditModal} open={editModal} entity={product}/>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -118,12 +103,12 @@ export const Products: FC = () => {
                 </TableHead>
 
                 <TableBody>
-                    {loading ?
+                    {isLoading ?
                         <Loader/>
                         :
                         <></>
                     }
-                    {data.length && !loading ? data.map(row => {
+                    {!isLoading ? data?.map(row => {
                             return (
                                 <ProductsList key={row.id} product={row}
                                               openRemoveNotification={openRemoveNotification}
@@ -134,12 +119,25 @@ export const Products: FC = () => {
                         :
                         <></>
                     }
-                    {!data.length && !loading ? <Empty/> : <></>}
+                    {!data?.length && !isLoading ? <Empty/> : <></>}
 
                 </TableBody>
             </Table>
-            <DeleteNotification heading={deleteHeading} text={deleteMessage}
-                                open={deleteNotification} setOpen={setDeleteNotification} removeEntity={removeEntity}/>
+            <DeleteNotification heading={deleteHeading}
+                                text={deleteMessage}
+                                open={deleteNotification}
+                                setOpen={setDeleteNotification}
+                                removeEntity={removeEntity}
+            />
+            {/*Notification*/}
+            <Snackbar
+                anchorOrigin={{vertical : "bottom", horizontal : "right"}}
+                open={openNotification}
+                onClose={() => setOpenNotification(false)}
+                message={messageNotification}
+                key={"bottom" + "right"}
+                autoHideDuration={2500}
+            />
         </Grid>
     );
 }

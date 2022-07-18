@@ -12,7 +12,7 @@ import {AxiosResponse} from "axios";
 import {CreateProductType} from "../../types/ProductType";
 import MenuItem from "@mui/material/MenuItem";
 import {OutlinedInput, Theme} from "@mui/material";
-import {CategoryType} from "../../types/CategoryType";
+import {ICategory} from "../../types/CategoryType";
 
 const style = {
     position: 'absolute',
@@ -37,7 +37,7 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
         description: '',
         categories: []
     })
-    const [categories, setCategories] = useState<CategoryType[]>([])
+    const [categories, setCategories] = useState<ICategory[]>([])
 
     const changeHandler = (event: any) => {
         setForm({...form, [event.target.name]: event.target.value})
@@ -49,7 +49,7 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
     const getCategories = useCallback(async () => {
         console.log('Зашли!')
         try {
-            const response: AxiosResponse<CategoryType[]> = await http.get("/categories")
+            const response: AxiosResponse<ICategory[]> = await http.get("/categories")
             setCategories([...categories, ...response.data])
         } catch (e) {
             console.log('e', e)
@@ -218,6 +218,7 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
                                     onChange={changeHandler}
                                     input={<OutlinedInput label="Name" />}
                                     MenuProps={MenuProps}
+                                    placeholder="Выберите категории"
                                 >
                                     {categories.length && categories.map(category => (
                                         <MenuItem

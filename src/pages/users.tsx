@@ -14,7 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import {AxiosResponse} from "axios";
 import {http} from "../http";
-import {ProductType} from "../types/ProductType";
+import {IProduct} from "../types/ProductType";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
@@ -25,50 +25,50 @@ import Table from "@mui/material/Table";
 
 
 export const Users: FC = () => {
-    const [data, setData] = useState<ProductType[]>([]);
-    const [openModal, setOpenModal] = useState<boolean>(false);
-    const [openEditModal, setOpenEditModal] = useState<boolean>(false);
-
-
-    const changeEntity = (entity: any) => {
-        // @ts-ignore
-        setData([...data, entity])
-    }
-
-
-    const [action, setAction] = useState(0);
-    const handleChange = (event: any) => {
-        if (event.target.value) setOpenEditModal(true)
-    };
-
-
-    const changeAction = () => {
-    }
-
-    const openEditModalWindow = () => {
-        setOpenEditModal(true)
-    }
-
-    useEffect(() => {
-        getUsers()
-    }, [])
-
-
-    const getUsers = async () => {
-        const response: AxiosResponse<ProductType[]> = await http.get("/users")
-        const products= response.data
-        setData([...data, ...products])
-    }
-
-    const removeEntity = async (id: number) => {
-        console.log("Удаляем товар")
-        // Подгружаем товары
-        const status: AxiosResponse<any> = await http.delete(`/products/${id}`)
-        console.log('status', status)
-        return await getUsers()
-    }
-
-    const handleOpen = () => setOpenModal(true);
+    // const [data, setData] = useState<ProductType[]>([]);
+    // const [openModal, setOpenModal] = useState<boolean>(false);
+    // const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+    //
+    //
+    // const changeEntity = (entity: any) => {
+    //     // @ts-ignore
+    //     setData([...data, entity])
+    // }
+    //
+    //
+    // const [action, setAction] = useState(0);
+    // const handleChange = (event: any) => {
+    //     if (event.target.value) setOpenEditModal(true)
+    // };
+    //
+    //
+    // const changeAction = () => {
+    // }
+    //
+    // const openEditModalWindow = () => {
+    //     setOpenEditModal(true)
+    // }
+    //
+    // useEffect(() => {
+    //     getUsers()
+    // }, [])
+    //
+    //
+    // const getUsers = async () => {
+    //     const response: AxiosResponse<ProductType[]> = await http.get("/users")
+    //     const products= response.data
+    //     setData([...data, ...products])
+    // }
+    //
+    // const removeEntity = async (id: number) => {
+    //     console.log("Удаляем товар")
+    //     // Подгружаем товары
+    //     const status: AxiosResponse<any> = await http.delete(`/products/${id}`)
+    //     console.log('status', status)
+    //     return await getUsers()
+    // }
+    //
+    // const handleOpen = () => setOpenModal(true);
     return (
         <Grid item xs={12}>
             {/*<section className="top_container">*/}

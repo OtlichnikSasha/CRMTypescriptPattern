@@ -6,98 +6,96 @@ import Modal from "@mui/material/Modal";
 import {EditModalWindowType} from "../../types/ModalWindowType";
 import Button from "@mui/material/Button";
 import {http} from "../../http"
-import {AxiosResponse} from "axios";
-import {CategoryEditType, CategoryType} from "../../types/CategoryType";
+import {ICategoryEdit, ICategory} from "../../types/CategoryType";
+import Snackbar from "@mui/material/Snackbar";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
-export const EditModalWindow: FC<EditModalWindowType<CategoryType>> = ({open, setOpen, entity}) => {
-    const [form, setForm] = useState<CategoryEditType>({
-        name: '',
-        description: ''
+export const EditModalWindow: FC<EditModalWindowType<ICategory>> = ({open, setOpen, entity}) => {
+    const [form, setForm] = useState<ICategoryEdit>({
+        name: entity.name,
+        description: entity.description,
+        id: entity.id
     })
-    useEffect(() => {
-        if(entity){
-            setForm({...form, description: entity.description, name: entity.name})
-        }
-    }, [entity])
 
-
+    const [openNotification, setOpenNotification] = useState<boolean>(false)
+    const [messageNotification, setMessageNotification] = useState<string>("")
 
     const changeHandler = (event: any) => {
         setForm({...form, [event.target.name]: event.target.value})
     }
-
     const handleClose = () => setOpen(false);
-
-    const addCategory = async () => {
+    const editCategory = async () => {
         try{
-            const data: AxiosResponse<any> = await http.post("/categories", form)
-            if(data.status === 201 || data.status === 200){
-                setForm({
-                    name: '',
-                    description: ''
-                })
-            }
+            await http.put(`/categories/${entity.id}`, form)
+            setMessageNotification('Категория успешно изменена!')
+            setOpenNotification(true)
         }
         catch(e){
             console.log('e', e)
         }
     }
     return (
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-                <div className="add_modal__flex top">
-                    <div className="add_modal__label">
-                        Добавить категорию
-                    </div>
-                    <div className="add_modal_close" onClick={handleClose}>
-                        <ClearIcon/>
-                    </div>
-                </div>
-                <div className="add_modal_container">
-                    <div className="add_modal__flex">
-                        <div className="add_modal__flex_item">
-                            <div className="add_modal__label">
-                                Название
-                            </div>
-                            <div className="add_modal__input_block">
-                                <TextField label="Название" variant="outlined" value={form.name} name="name" onChange={changeHandler}/>
-                            </div>
+        <>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box className="modal_window__box">
+                    <div className="add_modal__flex top">
+                        <div className="add_modal__label">
+                            Добавить категорию
                         </div>
-                        <div className="add_modal__flex_item">
-                            <div className="add_modal__label">
-                                Описание
-                            </div>
-                            <div className="add_modal__input_block">
-                                <TextField label="Описание" variant="outlined" name="description" value={form.description}
-                                           onChange={changeHandler}/>
-                            </div>
+                        <div className="add_modal_close" onClick={handleClose}>
+                            <ClearIcon/>
                         </div>
                     </div>
-                </div>
-                <div className="modal_bottom">
-                    <Button variant="contained" onClick={addCategory}>
-                        Добавить категорию
-                    </Button>
-                </div>
-            </Box>
-        </Modal>
+                    <div className="add_modal_container">
+                        <div className="add_modal__flex">
+                            <div className="add_modal__flex_item">
+                                <div className="add_modal__label">
+                                    Название
+                                </div>
+                                <div className="add_modal__input_block">
+                                    <TextField label="Название" variant="outlined"
+                                               value={form.name}
+                                               name="name"
+                                               onChange={changeHandler}
+                                    />
+                                </div>
+                            </div>
+                            <div className="add_modal__flex_item">
+                                <div className="add_modal__label">
+                                    Описание
+                                </div>
+                                <div className="add_modal__input_block">
+                                    <TextField label="Описание" variant="outlined"
+                                               name="description"
+                                               value={form.description}
+                                               onChange={changeHandler}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal_bottom">
+                        <Button variant="contained" onClick={editCategory}>
+                            Сохранить изменения
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
+            {/*Notification*/}
+            <Snackbar
+                anchorOrigin={{vertical : "bottom", horizontal : "right"}}
+                open={openNotification}
+                onClose={() => setOpenNotification(false)}
+                message={messageNotification}
+                key={"bottom" + "right"}
+                autoHideDuration={2500}
+            />
+        </>
+
     );
 };
 

@@ -3,7 +3,7 @@ import React from "react";
 export interface EditModalWindowType<T>{
     open: boolean,
     setOpen: React.ComponentState,
-    entity?: T
+    entity: T
 }
 
 export interface AddModalWindowType<>{

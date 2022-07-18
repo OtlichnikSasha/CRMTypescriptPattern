@@ -8,10 +8,10 @@ import {OutlinedInput} from "@mui/material";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import {EditModalWindowType} from "../../types/ModalWindowType";
-import {ProductType} from "../../types/ProductType";
+import {IProduct} from "../../types/ProductType";
 import {AxiosResponse} from "axios";
 import {http} from "../../http";
-import {CategoryType} from "../../types/CategoryType";
+import {ICategory} from "../../types/CategoryType";
 
 const style = {
     position: 'absolute',
@@ -25,9 +25,9 @@ const style = {
     p: 4,
 };
 
-export const EditModalWindow:FC<EditModalWindowType<ProductType>> = ({open, setOpen, entity}) => {
+export const EditModalWindow:FC<EditModalWindowType<IProduct>> = ({open, setOpen, entity}) => {
     const handleClose = () => setOpen(false);
-    const [form, setForm] = useState<ProductType>({
+    const [form, setForm] = useState<IProduct>({
         orders: null,
         name: '',
         amount: 0,
@@ -40,7 +40,7 @@ export const EditModalWindow:FC<EditModalWindowType<ProductType>> = ({open, setO
         categories: [],
         images: null
     })
-    const [categories, setCategories] = useState<CategoryType[]>([])
+    const [categories, setCategories] = useState<ICategory[]>([])
     useEffect(() => {
         if(entity) {
             setForm(entity)
@@ -50,7 +50,7 @@ export const EditModalWindow:FC<EditModalWindowType<ProductType>> = ({open, setO
     const getCategories = useCallback(async () => {
         console.log('Зашли!')
         try {
-            const response: AxiosResponse<CategoryType[]> = await http.get("/categories")
+            const response: AxiosResponse<ICategory[]> = await http.get("/categories")
             setCategories([...categories, ...response.data])
         } catch (e) {
             console.log('e', e)

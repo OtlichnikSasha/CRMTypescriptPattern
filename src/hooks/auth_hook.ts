@@ -1,7 +1,7 @@
 import {useState, useCallback, useEffect} from 'react'
 
 export const useAuth = () => {
-    const [token, setToken] = useState<string | null>(null)
+    const [token, setToken] = useState(localStorage.getItem("token"))
 
     const login = useCallback((jwtToken: string) => {
         setToken(jwtToken)

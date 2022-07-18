@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect, useRef, useCallback, ChangeEvent} from 'react';
+import React, {FC, useState} from 'react';
 import Grid from "@mui/material/Grid";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -6,18 +6,17 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import {Empty} from "../components/block/Empty";
 import Table from "@mui/material/Table";
+import Snackbar from "@mui/material/Snackbar";
 import {CategoriesList} from "../components/category/CategoriesList";
-import {http} from "../http/index"
-import {AxiosResponse} from "axios"
-import {CategoryEditType, CategoryType} from "../types/CategoryType";
 import {AddModalWindow} from "../components/category/AddModalWindow";
 import {DeleteNotification} from "../components/deleteNotification/DeleteNotification";
 import {TopActions} from "../components/topActions/TopActions";
 import {Loader} from "../components/loader/Loader";
 import {EditModalWindow} from "../components/category/EditModalWindow";
+import {ICategory} from "../types/CategoryType";
+import {useGetCategoriesQuery, useLazyGetCategoriesQuery, useRemoveCategoryMutation} from "../store/api/category.api";
 
 export const Categories: FC = () => {
-    const [data, setData] = useState<CategoryType[]>([]);
     const [deleteNotification, setDeleteNotification] = useState<boolean>(false)
     const [deleteHeading, setDeleteHeading] = useState<string>('')
     const [deleteMessage, setDeleteMessage] = useState<string>('')
@@ -25,38 +24,24 @@ export const Categories: FC = () => {
     const [search, setSearch] = useState<string>('')
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [editModal, setEditModal] = useState<boolean>(false);
-    const [category, setCategory] = useState<CategoryType>({
+    const [category, setCategory] = useState<ICategory>({
         name: '',
         description: '',
         id: 0
     });
-    const [loading, setLoading] = useState<boolean>(false);
+    const [openNotification, setOpenNotification] = useState<boolean>(false)
+    const [messageNotification, setMessageNotification] = useState<string>("")
+    const {isLoading, isError, data} = useGetCategoriesQuery()
+    const [fetchCategories] = useLazyGetCategoriesQuery()
+    const [fetchRemoveCategory] = useRemoveCategoryMutation()
 
 
-    const changeEntity = (entity: CategoryType) => {
-    }
-
-    const getCategories = useCallback(async () => {
-        setLoading(true)
-        const response: AxiosResponse<CategoryType[]> = await http.get("/categories")
-        setData([...data, ...response.data])
-        document.title = "Категории"
-        setLoading(false)
-    }, [])
-
-    useEffect(() => {
-        getCategories()
-    }, [getCategories])
-
-
-    const openEditModal = (entity: CategoryType) => {
+    const openEditModal = (entity: ICategory) => {
         setEditModal(true)
         setCategory(entity)
     }
-
-
     // Открываем модальное окно с удаление
-    const openRemoveNotification = (entity: CategoryType) => {
+    const openRemoveNotification = (entity: ICategory) => {
         setDeleteId(entity.id)
         setDeleteNotification(true)
         setDeleteHeading(`Вы действительно хотите удалить категорию <b>${entity.name}</b>?`)
@@ -65,29 +50,24 @@ export const Categories: FC = () => {
 
     // Удаляем сущность
     const removeEntity = async () => {
-        try {
-            const data: AxiosResponse = await http.delete(`/categories/${deleteId}`)
-            console.log('data', data)
-            return getCategories()
-        } catch (e) {
-
-        }
+        await fetchRemoveCategory(deleteId)
+        setOpenNotification(true)
+        setMessageNotification("Категория успешно удалена!")
+        setDeleteNotification(false)
+        return reloadData()
     }
 
     const startSearch = async () => {
-        if (search) {
-            try {
-                const data: AxiosResponse<CategoryType[]> = await http.get(`/categories?q=${search}`)
-                console.log('data', data)
-            } catch (e) {
-            }
-        }
+        // if (search) {
+        //     try {
+        //         const data: AxiosResponse<ICategory[]> = await http.get(`/categories?q=${search}`)
+        //         console.log('data', data)
+        //     } catch (e) {
+        //     }
+        // }
     }
 
-    const reloadData = async () => {
-        await getCategories()
-    }
-
+    const reloadData = () => fetchCategories()
     const handleOpen = () => setOpenModal(true);
     return (
         <Grid item xs={12}>
@@ -100,7 +80,7 @@ export const Categories: FC = () => {
                 reloadData={reloadData}
             />
             <AddModalWindow setOpen={setOpenModal} open={openModal}/>
-            <EditModalWindow setOpen={setEditModal} open={editModal} category={category}/>
+            <EditModalWindow setOpen={setEditModal} open={editModal} entity={category}/>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -111,12 +91,12 @@ export const Categories: FC = () => {
                 </TableHead>
 
                 <TableBody>
-                    {loading ?
+                    {isLoading ?
                         <Loader />
                         :
                         <></>
                     }
-                    {data.length && !loading ? data.map(row => {
+                    {!isLoading ? data?.map(row => {
                             return (
                                 <CategoriesList key={row.id} category={row}
                                                 openRemoveNotification={openRemoveNotification}
@@ -127,12 +107,21 @@ export const Categories: FC = () => {
                         :
                         <></>
                     }
-                    {!data.length && !loading ? <Empty/> : <></>}
+                    {!data?.length && !isLoading ? <Empty/> : <></>}
 
                 </TableBody>
             </Table>
             <DeleteNotification heading={deleteHeading} text={deleteMessage}
                                 open={deleteNotification} setOpen={setDeleteNotification} removeEntity={removeEntity}/>
+            {/*Notification*/}
+            <Snackbar
+                anchorOrigin={{vertical : "bottom", horizontal : "right"}}
+                open={openNotification}
+                onClose={() => setOpenNotification(false)}
+                message={messageNotification}
+                key={"bottom" + "right"}
+                autoHideDuration={2500}
+            />
         </Grid>
     );
 };

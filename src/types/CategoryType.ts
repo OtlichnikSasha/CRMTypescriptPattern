@@ -1,16 +1,17 @@
 export interface CategoriesType{
-    data: CategoryType[]
+    data: ICategory[]
 }
 
 
-export interface CategoryType{
+export interface ICategory{
     description: string
     id:  number
     name: string
     products?: []
 }
 
-export interface CategoryEditType{
+export interface ICategoryEdit{
     description: string
-    name: string
+    name: string,
+    id: number
 }

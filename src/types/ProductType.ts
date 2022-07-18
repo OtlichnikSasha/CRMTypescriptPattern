@@ -1,9 +1,9 @@
-import {CategoryType} from "./CategoryType";
+import {ICategory} from "./CategoryType";
 
-export interface ProductType{
+export interface IProduct{
     amount: number
     availability: boolean
-    categories?: null | CategoryType[]
+    categories?: null | ICategory[]
     description: string
     discountPrice: number
     id: number
@@ -23,5 +23,5 @@ export interface CreateProductType{
     views: number
     description: string
     discountPrice: number
-    categories: CategoryType[]
+    categories: IProduct[]
 }
