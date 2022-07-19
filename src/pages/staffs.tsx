@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Orders = () => {
+export const Staffs = () => {
     return (
         <div>
 

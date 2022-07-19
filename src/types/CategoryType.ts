@@ -15,3 +15,8 @@ export interface ICategoryEdit{
     name: string,
     id: number
 }
+
+export interface ICategoryCreate{
+    description: string
+    name: string,
+}

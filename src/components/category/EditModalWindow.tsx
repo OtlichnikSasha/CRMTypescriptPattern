@@ -1,38 +1,65 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import ClearIcon from "@mui/icons-material/Clear";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import {EditModalWindowType} from "../../types/ModalWindowType";
 import Button from "@mui/material/Button";
-import {http} from "../../http"
-import {ICategoryEdit, ICategory} from "../../types/CategoryType";
 import Snackbar from "@mui/material/Snackbar";
+import {IModalWindowEdit} from "../../types/ModalWindowType";
+import {ICategoryEdit, ICategory} from "../../types/CategoryType";
+import {useEditCategoryMutation, useLazyGetCategoriesQuery} from "../../store/api/category.api";
 
-export const EditModalWindow: FC<EditModalWindowType<ICategory>> = ({open, setOpen, entity}) => {
+export const EditModalWindow: FC<IModalWindowEdit<ICategory>> = ({open, setOpen, entity}) => {
     const [form, setForm] = useState<ICategoryEdit>({
-        name: entity.name,
-        description: entity.description,
-        id: entity.id
+        name: '',
+        description: '',
+        id: 0
     })
-
     const [openNotification, setOpenNotification] = useState<boolean>(false)
     const [messageNotification, setMessageNotification] = useState<string>("")
+    const [fetchEditCategory, {data, error}] = useEditCategoryMutation()
+    const [fetchCategories] = useLazyGetCategoriesQuery()
+
+    useEffect(() => {
+        if (entity) {
+            setForm({...form, name: entity.name, description: entity.description, id: entity.id})
+        }
+    }, [entity])
 
     const changeHandler = (event: any) => {
         setForm({...form, [event.target.name]: event.target.value})
     }
     const handleClose = () => setOpen(false);
     const editCategory = async () => {
-        try{
-            await http.put(`/categories/${entity.id}`, form)
-            setMessageNotification('Категория успешно изменена!')
-            setOpenNotification(true)
+        if (!form.name || !form.description) {
+            setMessageNotification("Не все обязательные поля заполнены!")
+            return setOpenNotification(true)
         }
-        catch(e){
-            console.log('e', e)
-        }
+        await fetchEditCategory(form)
     }
+
+    const editCategoryTrigger = useCallback(() => {
+        if (!error && data) {
+            setForm({
+                name: '',
+                description: '',
+                id: 0
+            })
+            setMessageNotification(`Категория успешно изменена!`)
+            setOpenNotification(true)
+            setOpen(false)
+            return fetchCategories()
+        }
+        if (error) {
+            setMessageNotification(JSON.stringify(error))
+            return setOpenNotification(true)
+        }
+    }, [data, error])
+
+    useEffect(() => {
+        editCategoryTrigger()
+    }, [editCategoryTrigger])
+
     return (
         <>
             <Modal
@@ -44,7 +71,7 @@ export const EditModalWindow: FC<EditModalWindowType<ICategory>> = ({open, setOp
                 <Box className="modal_window__box">
                     <div className="add_modal__flex top">
                         <div className="add_modal__label">
-                            Добавить категорию
+                            Изменить категорию <b>{entity.name}</b>
                         </div>
                         <div className="add_modal_close" onClick={handleClose}>
                             <ClearIcon/>
@@ -87,7 +114,7 @@ export const EditModalWindow: FC<EditModalWindowType<ICategory>> = ({open, setOp
             </Modal>
             {/*Notification*/}
             <Snackbar
-                anchorOrigin={{vertical : "bottom", horizontal : "right"}}
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
                 open={openNotification}
                 onClose={() => setOpenNotification(false)}
                 message={messageNotification}

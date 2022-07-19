@@ -5,29 +5,15 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Select from '@mui/material/Select';
 import Button from "@mui/material/Button";
-
-import {http} from "../../http"
-import {AddModalWindowType} from "../../types/ModalWindowType";
-import {AxiosResponse} from "axios";
-import {CreateProductType} from "../../types/ProductType";
 import MenuItem from "@mui/material/MenuItem";
-import {OutlinedInput, Theme} from "@mui/material";
-import {ICategory} from "../../types/CategoryType";
+import {OutlinedInput} from "@mui/material";
+import {IModalWindowCreate} from "../../types/ModalWindowType";
+import {IProductCreate} from "../../types/ProductType";
+import {useCreateProductMutation} from "../../store/api/product.api";
+import {useLazyGetCategoriesQuery} from "../../store/api/category.api";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
-export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
-    const [form, setForm] = useState<CreateProductType>({
+export const AddModalWindow: FC<IModalWindowCreate> = ({open, setOpen}) => {
+    const [form, setForm] = useState<IProductCreate>({
         name: '',
         views: 0,
         price: 0,
@@ -37,52 +23,23 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
         description: '',
         categories: []
     })
-    const [categories, setCategories] = useState<ICategory[]>([])
+    const [fetchCreateProduct, {isLoading, error, data}] = useCreateProductMutation()
+    const [fetchCategories, {isLoading: categoryLoading, data: categories}] = useLazyGetCategoriesQuery()
 
     const changeHandler = (event: any) => {
         setForm({...form, [event.target.name]: event.target.value})
     }
-
     const handleClose = () => setOpen(false);
 
-
-    const getCategories = useCallback(async () => {
-        console.log('Зашли!')
-        try {
-            const response: AxiosResponse<ICategory[]> = await http.get("/categories")
-            setCategories([...categories, ...response.data])
-        } catch (e) {
-            console.log('e', e)
-        }
-    }, [])
-
     useEffect(() => {
-        if(open) {
-            getCategories()
+        if(open && !categories?.length) {
+            fetchCategories()
         }
-        return () => {
-            setCategories([])
-        }
-    }, [open])
+    }, [open, categories])
 
     const addProduct = async () => {
-        try {
-            const data: AxiosResponse<any> = await http.post("/products", form)
-            if (data.status === 201 || data.status === 200) {
-                setForm({
-                    name: '',
-                    views: 0,
-                    price: 0,
-                    amount: 0,
-                    availability: false,
-                    discountPrice: 0,
-                    description: '',
-                    categories: []
-                })
-            }
-        } catch (e) {
-            console.log('e', e)
-        }
+        await fetchCreateProduct(form)
+
     }
 
     const ITEM_HEIGHT = 48;
@@ -96,15 +53,6 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
         },
     };
 
-
-    function getStyles(name: string, personName: string[], theme: Theme) {
-        return {
-            fontWeight:
-                personName.indexOf(name) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
-    }
     return (
         <Modal
             open={open}
@@ -112,7 +60,7 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style}>
+            <Box className="modal_window__box">
                 <div className="add_modal__flex top">
                     <div className="add_modal__label">
                         Добавить товар
@@ -220,7 +168,7 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
                                     MenuProps={MenuProps}
                                     placeholder="Выберите категории"
                                 >
-                                    {categories.length && categories.map(category => (
+                                    {categories?.length && categories?.map(category => (
                                         <MenuItem
                                             key={category.id}
                                             value={category.id}

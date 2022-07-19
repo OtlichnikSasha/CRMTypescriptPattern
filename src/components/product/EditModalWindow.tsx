@@ -7,25 +7,11 @@ import MenuItem from "@mui/material/MenuItem";
 import {OutlinedInput} from "@mui/material";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import {EditModalWindowType} from "../../types/ModalWindowType";
+import {IModalWindowEdit} from "../../types/ModalWindowType";
 import {IProduct} from "../../types/ProductType";
-import {AxiosResponse} from "axios";
-import {http} from "../../http";
 import {ICategory} from "../../types/CategoryType";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
-export const EditModalWindow:FC<EditModalWindowType<IProduct>> = ({open, setOpen, entity}) => {
+export const EditModalWindow:FC<IModalWindowEdit<IProduct>> = ({open, setOpen, entity}) => {
     const handleClose = () => setOpen(false);
     const [form, setForm] = useState<IProduct>({
         orders: null,
@@ -48,45 +34,21 @@ export const EditModalWindow:FC<EditModalWindowType<IProduct>> = ({open, setOpen
     }, [entity])
 
     const getCategories = useCallback(async () => {
-        console.log('Зашли!')
-        try {
-            const response: AxiosResponse<ICategory[]> = await http.get("/categories")
-            setCategories([...categories, ...response.data])
-        } catch (e) {
-            console.log('e', e)
-        }
+        // console.log('Зашли!')
+        // try {
+        //     const response: AxiosResponse<ICategory[]> = await http.get("/categories")
+        //     setCategories([...categories, ...response.data])
+        // } catch (e) {
+        //     console.log('e', e)
+        // }
     }, [])
 
     useEffect(() => {
-        if(open) {
-            getCategories()
-        }
-        return () => {
-            setCategories([])
-        }
+
     }, [open])
 
     const editProduct = async () => {
-        try {
-            const data: AxiosResponse<any> = await http.put("/products", form)
-            if (data.status === 201 || data.status === 200) {
-                setForm({
-                    id: 0,
-                    images: null,
-                    orders: null,
-                    name: '',
-                    views: 0,
-                    price: 0,
-                    amount: 0,
-                    availability: false,
-                    discountPrice: 0,
-                    description: '',
-                    categories: []
-                })
-            }
-        } catch (e) {
-            console.log('e', e)
-        }
+
     }
 
 
@@ -112,7 +74,7 @@ export const EditModalWindow:FC<EditModalWindowType<IProduct>> = ({open, setOpen
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style}>
+            <Box className="modal_window__box">
                 <div className="add_modal__flex top">
                     <div className="add_modal__label">
                         Добавить товар

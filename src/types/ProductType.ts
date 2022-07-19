@@ -15,7 +15,7 @@ export interface IProduct{
 }
 
 
-export interface CreateProductType{
+export interface IProductCreate{
     amount: number
     availability: boolean
     name: string
@@ -23,5 +23,5 @@ export interface CreateProductType{
     views: number
     description: string
     discountPrice: number
-    categories: IProduct[]
+    categories: ICategory[]
 }

@@ -1,8 +1,7 @@
-import {IProduct} from "../../types/ProductType";
+import {IProduct, IProductCreate} from "../../types/ProductType";
 import {commonApi} from "../common.api";
 
 const PRODUCTS = 'products'
-
 export const productApi = commonApi.injectEndpoints({
     endpoints: build => ({
         getProducts: build.query<IProduct[], void>({
@@ -16,14 +15,12 @@ export const productApi = commonApi.injectEndpoints({
                 method: "DELETE"
             }),
         }),
-        createProduct: build.mutation<IProduct, IProduct>({
-            query: ({id, name, amount, description}) => ({
+        createProduct: build.mutation<IProduct, IProductCreate>({
+            query: (form) => ({
                 url: `${PRODUCTS}`,
                 method: "POST",
                 body: {
-                    id,
-                    name,
-                    description,
+                    form
                 }
             }),
         }),
@@ -41,4 +38,4 @@ export const productApi = commonApi.injectEndpoints({
     })
 })
 
-export const {useGetProductsQuery, useLazyGetProductsQuery, useDeleteProductMutation} = productApi
+export const {useGetProductsQuery, useLazyGetProductsQuery, useDeleteProductMutation, useCreateProductMutation} = productApi

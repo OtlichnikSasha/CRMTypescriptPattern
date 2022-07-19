@@ -1,12 +1,12 @@
 import React from "react";
 
-export interface EditModalWindowType<T>{
+export interface IModalWindowEdit<T>{
     open: boolean,
     setOpen: React.ComponentState,
     entity: T
 }
 
-export interface AddModalWindowType<>{
+export interface IModalWindowCreate<>{
     open: boolean,
     setOpen: React.ComponentState,
 }

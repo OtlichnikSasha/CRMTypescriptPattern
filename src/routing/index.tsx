@@ -17,7 +17,7 @@ const MainRouter = () => {
                 )
             }
             {
-                    ! auth.token && publicRoutes.map(({path, element}) =>
+                    !auth.token && publicRoutes.map(({path, element}) =>
                         <Route key={path} path={path} element={element}/>
                     )
             }

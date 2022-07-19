@@ -1,22 +1,21 @@
-import React, {useState, FC, useEffect} from "react"
+import React, {FC, useState, } from "react"
 import Grid from '@mui/material/Grid';
-import {AddModalWindow} from "../components/product/AddModalWindow";
-import {EditModalWindow} from "../components/product/EditModalWindow";
-import {AxiosResponse} from "axios";
-import {http} from "../http";
-import {IProduct} from "../types/ProductType";
+import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
+import Snackbar from "@mui/material/Snackbar";
+
+import {IProduct} from "../types/ProductType";
+import {AddModalWindow} from "../components/product/AddModalWindow";
+import {EditModalWindow} from "../components/product/EditModalWindow";
 import {ProductsList} from "../components/product/ProductsList";
 import {Empty} from "../components/block/Empty";
-import Table from "@mui/material/Table";
 import {TopActions} from "../components/topActions/TopActions";
 import {Loader} from "../components/loader/Loader";
 import {DeleteNotification} from "../components/deleteNotification/DeleteNotification";
 import {useGetProductsQuery, useLazyGetProductsQuery, useDeleteProductMutation} from "../store/api/product.api";
-import Snackbar from "@mui/material/Snackbar";
 
 
 export const Products: FC = () => {

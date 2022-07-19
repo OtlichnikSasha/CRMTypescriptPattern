@@ -1,57 +1,58 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useEffect, useCallback} from 'react';
 import ClearIcon from "@mui/icons-material/Clear";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import {AddModalWindowType} from "../../types/ModalWindowType";
 import Button from "@mui/material/Button";
-import {http} from "../../http"
-import {AxiosResponse} from "axios";
 import Snackbar from "@mui/material/Snackbar";
-import {ICategory} from "../../types/CategoryType";
+import {IModalWindowCreate} from "../../types/ModalWindowType";
+import {ICategoryCreate} from "../../types/CategoryType";
+import {useLazyGetCategoriesQuery, useCreateCategoryMutation} from "../../store/api/category.api";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-const vertical = "bottom"
-const horizontal = "right"
-
-export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
-    const [form, setForm] = useState({
+export const AddModalWindow: FC<IModalWindowCreate> = ({open, setOpen}) => {
+    const [form, setForm] = useState<ICategoryCreate>({
         name: '',
         description: ''
     })
     const [openNotification, setOpenNotification] = useState<boolean>(false)
     const [messageNotification, setMessageNotification] = useState<string>("")
-
-
+    const [fetchCreateCategory, {data, error}] = useCreateCategoryMutation()
+    const [fetchCategories] = useLazyGetCategoriesQuery()
     const changeHandler = (event: any) => {
         setForm({...form, [event.target.name]: event.target.value})
     }
-
     const handleClose = () => setOpen(false);
 
-    const addCategory = async () => {
-        try {
-            const data: AxiosResponse<ICategory> = await http.post("/categories", form)
-            setMessageNotification(`Категория "${data.data.name}" успешно создана!`)
-            setOpenNotification(true)
+    const createCategory = async () => {
+        if(!form.name || !form.description){
+            setMessageNotification("Не все обязательные поля заполнены!")
+            return setOpenNotification(true)
+        }
+        await fetchCreateCategory(form)
+    }
+
+    const createCategoryTrigger = useCallback(() => {
+        if(!error && data){
             setForm({
                 name: '',
                 description: ''
+
             })
-        } catch (e) {
-            console.log('e', e)
+            setMessageNotification(`Категория ${data.name} успешно создана!`)
+            setOpenNotification(true)
+            setOpen(false)
+            return fetchCategories()
         }
-    }
+        if(error){
+            setMessageNotification(JSON.stringify(error))
+            return setOpenNotification(true)
+        }
+    }, [data, error])
+
+    useEffect(() => {
+        createCategoryTrigger()
+    }, [createCategoryTrigger])
+
     return (
         <>
             <Modal
@@ -60,8 +61,7 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>
-
+                <Box className="modal_window__box">
                     <div className="add_modal__flex top">
                         <div className="add_modal__label">
                             Добавить категорию
@@ -94,21 +94,21 @@ export const AddModalWindow: FC<AddModalWindowType> = ({open, setOpen}) => {
                         </div>
                     </div>
                     <div className="modal_bottom">
-                        <Button variant="contained" onClick={addCategory}>
+                        <Button variant="contained" onClick={createCategory}>
                             Добавить категорию
                         </Button>
                     </div>
                 </Box>
             </Modal>
             {/*Notification*/}
-            <Snackbar
-                anchorOrigin={{vertical, horizontal}}
-                open={openNotification}
-                onClose={() => setOpenNotification(false)}
-                message={messageNotification}
-                key={vertical + horizontal}
-                autoHideDuration={2500}
-            />
+                <Snackbar
+                    anchorOrigin={{vertical : "bottom", horizontal : "right"}}
+                    open={openNotification}
+                    onClose={() => setOpenNotification(false)}
+                    message={messageNotification}
+                    key={"bottom" + "right"}
+                    autoHideDuration={2500}
+                />
         </>
 
     );
